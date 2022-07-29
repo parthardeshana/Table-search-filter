@@ -3,6 +3,7 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import styled from "@emotion/styled";
 import { TextField } from "@mui/material";
 import useRepository from "../hooks/useRepository";
+import { IRepositoryList } from "../types/repositoryTypes";
 
 const columns: GridColDef[] = [
 	{
@@ -49,25 +50,29 @@ const StyledTextField = styled(TextField)`
 	width: 30%;
 `;
 
-function RepoTable() {
-	const [searchWord, setSearchWord] = useState<string>("");
-	let repositoryList = useRepository();
 
-	const globalSearch = () => {
-		let filteredData = repositoryList.filter((value) => {
+function RepositoryTable() {
+	const [searchWord, setSearchWord] = useState<string>("");
+	const repositoryList = useRepository();
+
+	const globalSearch = (): IRepositoryList[] => {
+		const filteredRepositories = repositoryList.filter((value) => {
 			return (
 				value?.name?.toLowerCase().includes(searchWord?.toLowerCase()) ||
 				value?.language?.toLowerCase().includes(searchWord?.toLowerCase()) ||
 				value?.forks?.toString().includes(searchWord?.toLowerCase())
 			);
 		});
-		return filteredData;
+		return filteredRepositories;
 	};
 
-	let filterRepositoryList = searchWord ? globalSearch() : repositoryList ;
+	const filterRepositoryList: IRepositoryList[] | [] = searchWord
+		? globalSearch()
+		: repositoryList;
 
 	return (
 		<AppStyledProvider>
+			<h2>Repository List </h2>
 			<StyledTextField
 				value={searchWord}
 				onChange={(event) => setSearchWord(event.target.value)}
@@ -84,4 +89,4 @@ function RepoTable() {
 	);
 }
 
-export default RepoTable;
+export default RepositoryTable;

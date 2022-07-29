@@ -1,23 +1,15 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-
-interface IRepositoryList {
-	name: string;
-	forks: number;
-	language: string;
-	owner: {
-		avatar_url: string;
-		url: string;
-	};
-}
+import { IRepositoryList } from "../types/repositoryTypes";
 
 const useRepository = (): IRepositoryList[] => {
 	const [repositoryList, setRepositoryList] = useState<IRepositoryList[]>([]);
 
+	const url = "https://api.github.com/search/repositories";
+	const queryParams = "facebook/react";
+
 	const getRepositories = (): Promise<any> => {
-		return axios.get(
-			"https://api.github.com/search/repositories?q=facebook/react"
-		);
+		return axios.get(`${url}?q=${queryParams}`);
 	};
 
 	useEffect(() => {
